@@ -226,6 +226,34 @@
                 { label: "Regionalização", style: "bg-white border-orange-200 text-sm text-slate-600 rounded-xl" },
                 { label: "Hierarquização", style: "bg-white border-orange-200 text-sm text-slate-600 rounded-xl" }
               ]
+            },
+            {
+              label: "10) Legislação Complementar",
+              icon: "fa-gavel",
+              style: "bg-pink-50 border-pink-400 text-pink-900 shadow-md text-base font-bold rounded-2xl",
+              children: [
+                {
+                  label: "Lei nº 9.784/1999",
+                  style: "bg-pink-100 border-pink-400 font-semibold text-sm text-pink-900 rounded-2xl",
+                  children: [
+                    { label: "Processo administrativo na gestão pública", style: "bg-white border-pink-200 text-sm text-slate-600 rounded-xl" }
+                  ]
+                },
+                {
+                  label: "Lei nº 12.527/2011",
+                  style: "bg-pink-100 border-pink-400 font-semibold text-sm text-pink-900 rounded-2xl",
+                  children: [
+                    { label: "Acesso à informação e transparência", style: "bg-white border-pink-200 text-sm text-slate-600 rounded-xl" }
+                  ]
+                },
+                {
+                  label: "Lei nº 13.979/2020",
+                  style: "bg-pink-100 border-pink-400 font-semibold text-sm text-pink-900 rounded-2xl",
+                  children: [
+                    { label: "Medidas em emergência de saúde pública (COVID-19)", style: "bg-white border-pink-200 text-sm text-slate-600 rounded-xl" }
+                  ]
+                }
+              ]
             }
           ]
         };
@@ -281,6 +309,7 @@
           if (iconName === 'fa-users') return `${baseClasses} fa-users text-blue-600`;
           if (iconName === 'fa-building') return `${baseClasses} fa-building text-blue-600`;
           if (iconName === 'fa-heart') return `${baseClasses} fa-heart text-teal-600`;
+          if (iconName === 'fa-gavel') return `${baseClasses} fa-gavel text-pink-600`;
           
           return `${baseClasses} ${iconName}`;
         };
@@ -702,6 +731,7 @@
                      <button onClick={() => handleNavigate("7) Decreto nº 7.508/2011")} className="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-bold border border-indigo-200 shadow-sm hover:bg-indigo-200 hover:scale-105 transition-all cursor-pointer">Dec. 7.508</button>
                      <button onClick={() => handleNavigate("8) Financiamento do SUS")} className="px-3 py-1 rounded-full bg-cyan-100 text-cyan-800 text-xs font-bold border border-cyan-200 shadow-sm hover:bg-cyan-200 hover:scale-105 transition-all cursor-pointer">Financiamento</button>
                      <button onClick={() => handleNavigate("9) Diretrizes estruturais")} className="px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-xs font-bold border border-orange-200 shadow-sm hover:bg-orange-200 hover:scale-105 transition-all cursor-pointer">Diretrizes</button>
+                     <button onClick={() => handleNavigate("10) Legislação Complementar")} className="px-3 py-1 rounded-full bg-pink-100 text-pink-800 text-xs font-bold border border-pink-200 shadow-sm hover:bg-pink-200 hover:scale-105 transition-all cursor-pointer">Leg. Complementar</button>
                   </div>
                 </div>
               </header>
