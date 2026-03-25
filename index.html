@@ -248,10 +248,8 @@
               transform-origin: left center;
             }
 
-            /* Animação das Linhas SVG */
+            /* Animação das Linhas SVG (stroke dinâmico) */
             .path-line {
-              stroke-dasharray: 800;
-              stroke-dashoffset: 800;
               animation: drawLine 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
             @keyframes drawLine {
@@ -338,7 +336,14 @@
               const cp2x = endX - cpDistance;
               const cp2y = endY;
 
-              return `M ${startX} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${endX} ${endY}`;
+              // Calcula a distância real para garantir que a linha inteira seja desenhada sem cortes
+              const distance = Math.hypot(endX - startX, endY - startY);
+              const pathLength = Math.max(100, distance * 1.5); // 1.5x compensa a curvatura de Bezier
+
+              return {
+                d: `M ${startX} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${endX} ${endY}`,
+                length: pathLength
+              };
             }).filter(Boolean);
 
             setLines(newLines);
@@ -358,6 +363,24 @@
             }
             
             return () => observer.disconnect();
+          }, [isExpanded, calculateLines]);
+
+          // Loop de animação: Sincroniza a curva da linha enquanto o nó se move/expande na tela (Animação CSS)
+          useEffect(() => {
+            if (!isExpanded) return;
+            let frameId;
+            const start = performance.now();
+            
+            const animateLines = (time) => {
+              calculateLines();
+              // Continua recalculando durante os primeiros 400ms (duração da animação growRight)
+              if (time - start < 400) {
+                frameId = requestAnimationFrame(animateLines);
+              }
+            };
+            
+            frameId = requestAnimationFrame(animateLines);
+            return () => cancelAnimationFrame(frameId);
           }, [isExpanded, calculateLines]);
 
           // Expandir tudo
@@ -399,16 +422,23 @@
             <div ref={wrapperRef} className="relative flex flex-row items-center gap-10">
               {/* Linhas Conectoras SVG */}
               {isExpanded && hasChildren && (
-                <svg className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-visible z-0">
-                  {lines.map((path, index) => (
+                <svg 
+                  className="absolute top-0 left-0 pointer-events-none z-0" 
+                  style={{ width: '100%', height: '100%', overflow: 'visible' }}
+                >
+                  {lines.map((pathObj, index) => (
                     <path 
                       key={index} 
-                      d={path} 
+                      d={pathObj.d} 
                       fill="none" 
-                      stroke="#cbd5e1" // slate-300
+                      stroke="#94a3b8" /* slate-400 (levemente mais escuro para garantir clareza visual) */
                       strokeWidth="2.5" 
                       strokeLinecap="round"
                       className="path-line"
+                      style={{
+                        strokeDasharray: pathObj.length,
+                        strokeDashoffset: pathObj.length
+                      }}
                     />
                   ))}
                 </svg>
