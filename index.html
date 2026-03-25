@@ -380,6 +380,7 @@
           const mainRef = useRef(null);
 
           // Referência sofisticada para manter rastreamento constante sem forçar renderizações extras
+          const pointerCache = useRef(new Map());
           const pointerState = useRef({
             isDown: false,
             startX: 0,
@@ -388,7 +389,7 @@
             lastY: 0,
             pointerId: null,
             isDragging: false,
-            activePointers: 0
+            lastDistance: null
           });
 
           const handleNavigate = (targetLabel) => {
@@ -401,8 +402,9 @@
             if (!mainElement) return;
 
             // Bloqueio condicional: impede scroll da página APENAS quando há um arrastar ativo
+            // ou quando há zoom de pinça ativo
             const preventScrollWhenDragging = (e) => {
-              if (pointerState.current.isDragging) {
+              if (pointerState.current.isDragging || pointerCache.current.size >= 2) {
                 e.preventDefault();
               }
             };
@@ -467,64 +469,142 @@
             return () => window.removeEventListener('centerNode', handleCenterNode);
           }, []);
 
-          // Handlers de Arrastar e Soltar (Pan - Pointer Events)
+          // Handlers de Arrastar e Zoom (Pan & Pinch - Pointer Events)
           const handlePointerDown = (e) => {
-            pointerState.current.activePointers++;
+            pointerCache.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
             
-            // Ignora multi-touch e cliques em elementos interativos
-            if (e.target.closest('button') || pointerState.current.activePointers > 1) {
+            // Ignora para o Pan se for um botão interativo (mas rastreia o dedo)
+            if (e.target.closest('button')) {
               pointerState.current.isDown = false;
               return; 
             }
             
-            pointerState.current = {
-              ...pointerState.current,
-              isDown: true,
-              startX: e.clientX,
-              startY: e.clientY,
-              lastX: e.clientX,
-              lastY: e.clientY,
-              pointerId: e.pointerId,
-              isDragging: false
-            };
-            setIsDragging(false); // Garante reset do feedback visual
+            // Se for o primeiro dedo no canvas, prepara para arrastar (Pan)
+            if (pointerCache.current.size === 1) {
+                pointerState.current = {
+                  ...pointerState.current,
+                  isDown: true,
+                  startX: e.clientX,
+                  startY: e.clientY,
+                  lastX: e.clientX,
+                  lastY: e.clientY,
+                  pointerId: e.pointerId,
+                  isDragging: false,
+                  lastDistance: null
+                };
+                setIsDragging(false);
 
-            if (mainRef.current) {
-              mainRef.current.setPointerCapture(e.pointerId);
+                if (mainRef.current) {
+                  mainRef.current.setPointerCapture(e.pointerId);
+                }
             }
           };
 
           const handlePointerMove = (e) => {
-            if (!pointerState.current.isDown || e.pointerId !== pointerState.current.pointerId) return;
+            if (!pointerCache.current.has(e.pointerId)) return;
 
-            const dx = e.clientX - pointerState.current.startX;
-            const dy = e.clientY - pointerState.current.startY;
+            // Atualiza posição do ponteiro na cache
+            pointerCache.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
-            // Threshold (Limiar) de 5px para ativar o modo de arraste (diferenciando de um toque simples)
-            if (!pointerState.current.isDragging && Math.sqrt(dx * dx + dy * dy) > 5) {
-              pointerState.current.isDragging = true;
-              setIsDragging(true);
+            // Lógica de Pinch Zoom (2 dedos)
+            if (pointerCache.current.size === 2) {
+              // Cancela o Pan se estiver a acontecer
+              pointerState.current.isDown = false;
+              if (pointerState.current.isDragging) {
+                  pointerState.current.isDragging = false;
+                  setIsDragging(false);
+              }
+
+              const pointers = Array.from(pointerCache.current.values());
+              const p1 = pointers[0];
+              const p2 = pointers[1];
+
+              // Distância atual entre os 2 dedos
+              const currentDistance = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+
+              if (pointerState.current.lastDistance) {
+                const scaleMultiplier = currentDistance / pointerState.current.lastDistance;
+                
+                // Encontra o centro do movimento de pinça (âncora do zoom)
+                const centerX = (p1.x + p2.x) / 2;
+                const centerY = (p1.y + p2.y) / 2;
+
+                setScale(prevScale => {
+                   const newScale = Math.min(Math.max(0.1, prevScale * scaleMultiplier), 4);
+                   if (newScale === prevScale) return prevScale;
+
+                   setPosition(prevPos => {
+                      if (!mainRef.current) return prevPos;
+                      const rect = mainRef.current.getBoundingClientRect();
+                      const cursorX = centerX - rect.left;
+                      const cursorY = centerY - rect.top;
+
+                      const pointX = (cursorX - prevPos.x) / prevScale;
+                      const pointY = (cursorY - prevPos.y) / prevScale;
+
+                      return {
+                        x: cursorX - pointX * newScale,
+                        y: cursorY - pointY * newScale
+                      };
+                   });
+                   return newScale;
+                });
+              }
+              pointerState.current.lastDistance = currentDistance;
             }
+            // Lógica de Pan (1 dedo)
+            else if (pointerCache.current.size === 1 && pointerState.current.isDown) {
+              if (e.pointerId !== pointerState.current.pointerId) return;
 
-            if (pointerState.current.isDragging) {
-              const deltaX = e.clientX - pointerState.current.lastX;
-              const deltaY = e.clientY - pointerState.current.lastY;
-              
-              setPosition(prev => ({ x: prev.x + deltaX, y: prev.y + deltaY }));
-              
-              pointerState.current.lastX = e.clientX;
-              pointerState.current.lastY = e.clientY;
+              const dx = e.clientX - pointerState.current.startX;
+              const dy = e.clientY - pointerState.current.startY;
+
+              // Threshold (Limiar) de 5px para ativar o modo de arraste (diferenciando de um toque simples)
+              if (!pointerState.current.isDragging && Math.sqrt(dx * dx + dy * dy) > 5) {
+                pointerState.current.isDragging = true;
+                setIsDragging(true);
+              }
+
+              if (pointerState.current.isDragging) {
+                const deltaX = e.clientX - pointerState.current.lastX;
+                const deltaY = e.clientY - pointerState.current.lastY;
+                
+                setPosition(prev => ({ x: prev.x + deltaX, y: prev.y + deltaY }));
+                
+                pointerState.current.lastX = e.clientX;
+                pointerState.current.lastY = e.clientY;
+              }
             }
           };
 
           const handlePointerUp = (e) => {
-            pointerState.current.activePointers = Math.max(0, pointerState.current.activePointers - 1);
-            if (e.pointerId !== pointerState.current.pointerId) return;
-            
-            pointerState.current.isDown = false;
-            pointerState.current.isDragging = false;
-            pointerState.current.pointerId = null;
-            setIsDragging(false);
+            pointerCache.current.delete(e.pointerId);
+
+            if (pointerCache.current.size < 2) {
+              pointerState.current.lastDistance = null;
+            }
+
+            if (pointerCache.current.size === 0) {
+              pointerState.current.isDown = false;
+              pointerState.current.isDragging = false;
+              pointerState.current.pointerId = null;
+              setIsDragging(false);
+            } else if (pointerCache.current.size === 1) {
+               // Evita saltos se retirar um dos dedos durante o zoom, forçando re-toque
+               const remainingId = Array.from(pointerCache.current.keys())[0];
+               const remainingPointer = pointerCache.current.get(remainingId);
+               pointerState.current = {
+                 ...pointerState.current,
+                 isDown: true,
+                 startX: remainingPointer.x,
+                 startY: remainingPointer.y,
+                 lastX: remainingPointer.x,
+                 lastY: remainingPointer.y,
+                 pointerId: remainingId,
+                 isDragging: false
+               };
+               setIsDragging(false);
+            }
             
             if (mainRef.current && mainRef.current.hasPointerCapture(e.pointerId)) {
               mainRef.current.releasePointerCapture(e.pointerId);
@@ -543,7 +623,7 @@
                       Mapa Mental: Marco Legal do SUS
                     </h1>
                     <p className="text-slate-500 mt-1 text-sm font-medium">
-                      Role o mouse para <span className="font-bold">Zoom</span>. Clique ou toque e arraste o fundo para <span className="font-bold">Mover</span>.
+                      Faça <span className="font-bold">Zoom</span> (movimento de pinça ou scroll do rato). Toque e arraste o fundo para <span className="font-bold">Mover</span>.
                     </p>
                     <div className="flex gap-3 mt-4">
                       <button 
@@ -574,19 +654,20 @@
                 </div>
               </header>
 
-              {/* Área Interativa com Pan e Zoom */}
+              {/* Área Interativa com Pan e Pinch Zoom */}
               <main 
                 ref={mainRef}
                 className={`flex-1 relative overflow-hidden bg-dots transition-opacity duration-200 ${isDragging ? 'cursor-grabbing opacity-90 shadow-inner' : 'cursor-grab opacity-100'}`}
                 style={{
                    backgroundPosition: `${position.x}px ${position.y}px`,
                    backgroundSize: `${24 * scale}px ${24 * scale}px`,
-                   touchAction: 'pan-x pan-y' // Requisito: permite scroll do navegador e evita touch-action: none global
+                   touchAction: 'pan-x pan-y' // Permite scroll do navegador e evita touch-action: none global
                 }}
                 onPointerDown={handlePointerDown}
                 onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}
                 onPointerCancel={handlePointerUp}
+                onPointerOut={handlePointerUp}
               >
                 <div 
                   className="absolute top-0 left-0 w-max transform-gpu"
