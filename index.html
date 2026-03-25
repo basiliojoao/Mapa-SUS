@@ -19,33 +19,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Onde o aplicativo será renderizado -->
     <div id="root"></div>
 
-    <!-- Código da Aplicação -->
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect, useRef, useCallback } = React;
 
         // Dados do Mapa Mental
         const mindMapData = {
           label: "MARCO LEGAL DO SUS",
           icon: "fa-balance-scale",
-          style: "bg-slate-800 text-white border-slate-900 shadow-xl text-lg uppercase tracking-wider font-bold",
+          style: "bg-slate-800 text-white border-slate-900 shadow-2xl text-lg uppercase tracking-wider font-extrabold px-6 py-4 rounded-3xl",
           children: [
             {
               label: "1) Constituição Federal de 1988",
               icon: "fa-book-open",
-              style: "bg-emerald-50 border-emerald-500 text-emerald-900 shadow-md text-base font-bold",
+              style: "bg-emerald-50 border-emerald-400 text-emerald-900 shadow-md text-base font-bold rounded-2xl",
               children: [
-                { label: "Saúde como direito de todos e dever do Estado", icon: "fa-landmark", style: "bg-white border-emerald-200 text-sm font-medium text-slate-700" },
-                { label: "Criação do SUS", icon: "fa-heartbeat", style: "bg-white border-emerald-200 text-sm font-medium text-slate-700" },
+                { label: "Saúde como direito de todos e dever do Estado", icon: "fa-landmark", style: "bg-white border-emerald-200 text-sm font-medium text-slate-700 rounded-xl" },
+                { label: "Criação do SUS", icon: "fa-heartbeat", style: "bg-white border-emerald-200 text-sm font-medium text-slate-700 rounded-xl" },
                 {
                   label: "Princípios do SUS",
-                  style: "bg-emerald-100 border-emerald-400 font-semibold text-sm text-emerald-900",
+                  style: "bg-emerald-100 border-emerald-400 font-semibold text-sm text-emerald-900 rounded-2xl",
                   children: [
-                    { label: "Universalidade", icon: "fa-check-circle", style: "bg-white border-emerald-200 text-sm text-slate-600" },
-                    { label: "Integralidade", icon: "fa-check-circle", style: "bg-white border-emerald-200 text-sm text-slate-600" },
-                    { label: "Equidade", icon: "fa-check-circle", style: "bg-white border-emerald-200 text-sm text-slate-600" }
+                    { label: "Universalidade", icon: "fa-check-circle", style: "bg-white border-emerald-200 text-sm text-slate-600 rounded-xl" },
+                    { label: "Integralidade", icon: "fa-check-circle", style: "bg-white border-emerald-200 text-sm text-slate-600 rounded-xl" },
+                    { label: "Equidade", icon: "fa-check-circle", style: "bg-white border-emerald-200 text-sm text-slate-600 rounded-xl" }
                   ]
                 }
               ]
@@ -53,25 +51,25 @@
             {
               label: "2) Leis Orgânicas da Saúde",
               icon: "fa-file-alt",
-              style: "bg-blue-50 border-blue-500 text-blue-900 shadow-md text-base font-bold",
+              style: "bg-blue-50 border-blue-400 text-blue-900 shadow-md text-base font-bold rounded-2xl",
               children: [
                 {
                   label: "Lei nº 8.080/1990",
-                  style: "bg-blue-100 border-blue-400 font-semibold text-sm text-blue-900",
+                  style: "bg-blue-100 border-blue-400 font-semibold text-sm text-blue-900 rounded-2xl",
                   children: [
-                    { label: "Organização e funcionamento do SUS", style: "bg-white border-blue-200 text-sm text-slate-600" },
-                    { label: "Vigilância em saúde", style: "bg-white border-blue-200 text-sm text-slate-600" },
-                    { label: "Competências (União, Estados, Municípios)", icon: "fa-building", style: "bg-white border-blue-200 text-sm text-slate-600" }
+                    { label: "Organização e funcionamento do SUS", style: "bg-white border-blue-200 text-sm text-slate-600 rounded-xl" },
+                    { label: "Vigilância em saúde", style: "bg-white border-blue-200 text-sm text-slate-600 rounded-xl" },
+                    { label: "Competências (União, Estados, Municípios)", icon: "fa-building", style: "bg-white border-blue-200 text-sm text-slate-600 rounded-xl" }
                   ]
                 },
                 {
                   label: "Lei nº 8.142/1990",
-                  style: "bg-blue-100 border-blue-400 font-semibold text-sm text-blue-900",
+                  style: "bg-blue-100 border-blue-400 font-semibold text-sm text-blue-900 rounded-2xl",
                   children: [
-                    { label: "Participação social", icon: "fa-users", style: "bg-white border-blue-200 text-sm text-slate-600" },
-                    { label: "Conselhos de Saúde", style: "bg-white border-blue-200 text-sm text-slate-600" },
-                    { label: "Conferências de Saúde", style: "bg-white border-blue-200 text-sm text-slate-600" },
-                    { label: "Transferência de recursos", style: "bg-white border-blue-200 text-sm text-slate-600" }
+                    { label: "Participação social", icon: "fa-users", style: "bg-white border-blue-200 text-sm text-slate-600 rounded-xl" },
+                    { label: "Conselhos de Saúde", style: "bg-white border-blue-200 text-sm text-slate-600 rounded-xl" },
+                    { label: "Conferências de Saúde", style: "bg-white border-blue-200 text-sm text-slate-600 rounded-xl" },
+                    { label: "Transferência de recursos", style: "bg-white border-blue-200 text-sm text-slate-600 rounded-xl" }
                   ]
                 }
               ]
@@ -79,14 +77,14 @@
             {
               label: "3) Consolidação do SUS",
               icon: "fa-shield-alt",
-              style: "bg-amber-50 border-amber-500 text-amber-900 shadow-md text-base font-bold",
+              style: "bg-amber-50 border-amber-400 text-amber-900 shadow-md text-base font-bold rounded-2xl",
               children: [
                 {
                   label: "Lei nº 8.689/1993",
-                  style: "bg-amber-100 border-amber-400 font-semibold text-sm text-amber-900",
+                  style: "bg-amber-100 border-amber-400 font-semibold text-sm text-amber-900 rounded-2xl",
                   children: [
-                    { label: "Extinção do INAMPS", style: "bg-white border-amber-200 text-sm text-slate-600" },
-                    { label: "Consolidação do SUS como sistema único", style: "bg-white border-amber-200 text-sm text-slate-600" }
+                    { label: "Extinção do INAMPS", style: "bg-white border-amber-200 text-sm text-slate-600 rounded-xl" },
+                    { label: "Consolidação do SUS como sistema único", style: "bg-white border-amber-200 text-sm text-slate-600 rounded-xl" }
                   ]
                 }
               ]
@@ -94,28 +92,28 @@
             {
               label: "4) Normas Operacionais Básicas (NOB)",
               icon: "fa-cog",
-              style: "bg-purple-50 border-purple-500 text-purple-900 shadow-md text-base font-bold",
+              style: "bg-purple-50 border-purple-400 text-purple-900 shadow-md text-base font-bold rounded-2xl",
               children: [
                 {
                   label: "NOB 91",
-                  style: "bg-purple-100 border-purple-400 font-semibold text-sm text-purple-900",
+                  style: "bg-purple-100 border-purple-400 font-semibold text-sm text-purple-900 rounded-2xl",
                   children: [
-                    { label: "Início da descentralização", style: "bg-white border-purple-200 text-sm text-slate-600" }
+                    { label: "Início da descentralização", style: "bg-white border-purple-200 text-sm text-slate-600 rounded-xl" }
                   ]
                 },
                 {
                   label: "NOB 93",
-                  style: "bg-purple-100 border-purple-400 font-semibold text-sm text-purple-900",
+                  style: "bg-purple-100 border-purple-400 font-semibold text-sm text-purple-900 rounded-2xl",
                   children: [
-                    { label: "Fortalecimento da gestão municipal", style: "bg-white border-purple-200 text-sm text-slate-600" }
+                    { label: "Fortalecimento da gestão municipal", style: "bg-white border-purple-200 text-sm text-slate-600 rounded-xl" }
                   ]
                 },
                 {
                   label: "NOB 96",
-                  style: "bg-purple-100 border-purple-400 font-semibold text-sm text-purple-900",
+                  style: "bg-purple-100 border-purple-400 font-semibold text-sm text-purple-900 rounded-2xl",
                   children: [
-                    { label: "Gestão plena municipal", style: "bg-white border-purple-200 text-sm text-slate-600" },
-                    { label: "Consolidação da descentralização", style: "bg-white border-purple-200 text-sm text-slate-600" }
+                    { label: "Gestão plena municipal", style: "bg-white border-purple-200 text-sm text-slate-600 rounded-xl" },
+                    { label: "Consolidação da descentralização", style: "bg-white border-purple-200 text-sm text-slate-600 rounded-xl" }
                   ]
                 }
               ]
@@ -123,14 +121,14 @@
             {
               label: "5) NOAS (Norma Operacional)",
               icon: "fa-network-wired",
-              style: "bg-rose-50 border-rose-500 text-rose-900 shadow-md text-base font-bold",
+              style: "bg-rose-50 border-rose-400 text-rose-900 shadow-md text-base font-bold rounded-2xl",
               children: [
                 {
                   label: "NOAS 2001 e 2002",
-                  style: "bg-rose-100 border-rose-400 font-semibold text-sm text-rose-900",
+                  style: "bg-rose-100 border-rose-400 font-semibold text-sm text-rose-900 rounded-2xl",
                   children: [
-                    { label: "Ênfase na regionalização", style: "bg-white border-rose-200 text-sm text-slate-600" },
-                    { label: "Assistência por níveis de complexidade", style: "bg-white border-rose-200 text-sm text-slate-600" }
+                    { label: "Ênfase na regionalização", style: "bg-white border-rose-200 text-sm text-slate-600 rounded-xl" },
+                    { label: "Assistência por níveis de complexidade", style: "bg-white border-rose-200 text-sm text-slate-600 rounded-xl" }
                   ]
                 }
               ]
@@ -138,30 +136,30 @@
             {
               label: "6) Pacto pela Saúde (2006)",
               icon: "fa-handshake",
-              style: "bg-teal-50 border-teal-500 text-teal-900 shadow-md text-base font-bold",
+              style: "bg-teal-50 border-teal-400 text-teal-900 shadow-md text-base font-bold rounded-2xl",
               children: [
                 {
                   label: "Pacto pela Vida",
                   icon: "fa-heart",
-                  style: "bg-teal-100 border-teal-400 font-semibold text-sm text-teal-900",
+                  style: "bg-teal-100 border-teal-400 font-semibold text-sm text-teal-900 rounded-2xl",
                   children: [
-                    { label: "Prioridades sanitárias", style: "bg-white border-teal-200 text-sm text-slate-600" }
+                    { label: "Prioridades sanitárias", style: "bg-white border-teal-200 text-sm text-slate-600 rounded-xl" }
                   ]
                 },
                 {
                   label: "Pacto em Defesa do SUS",
                   icon: "fa-shield-alt",
-                  style: "bg-teal-100 border-teal-400 font-semibold text-sm text-teal-900",
+                  style: "bg-teal-100 border-teal-400 font-semibold text-sm text-teal-900 rounded-2xl",
                   children: [
-                    { label: "Valorização do SUS", style: "bg-white border-teal-200 text-sm text-slate-600" }
+                    { label: "Valorização do SUS", style: "bg-white border-teal-200 text-sm text-slate-600 rounded-xl" }
                   ]
                 },
                 {
                   label: "Pacto de Gestão",
                   icon: "fa-cog",
-                  style: "bg-teal-100 border-teal-400 font-semibold text-sm text-teal-900",
+                  style: "bg-teal-100 border-teal-400 font-semibold text-sm text-teal-900 rounded-2xl",
                   children: [
-                    { label: "Responsabilidades (União, Estados, Municípios)", style: "bg-white border-teal-200 text-sm text-slate-600" }
+                    { label: "Responsabilidades (União, Estados, Municípios)", style: "bg-white border-teal-200 text-sm text-slate-600 rounded-xl" }
                   ]
                 }
               ]
@@ -169,24 +167,24 @@
             {
               label: "7) Decreto nº 7.508/2011",
               icon: "fa-scroll",
-              style: "bg-indigo-50 border-indigo-500 text-indigo-900 shadow-md text-base font-bold",
+              style: "bg-indigo-50 border-indigo-400 text-indigo-900 shadow-md text-base font-bold rounded-2xl",
               children: [
-                { label: "Regulamenta a Lei 8.080", style: "bg-indigo-100 border-indigo-400 font-semibold text-sm text-indigo-900" },
+                { label: "Regulamenta a Lei 8.080", style: "bg-indigo-100 border-indigo-400 font-semibold text-sm text-indigo-900 rounded-2xl" },
                 {
                   label: "Define:",
-                  style: "bg-indigo-100 border-indigo-400 font-semibold text-sm text-indigo-900",
+                  style: "bg-indigo-100 border-indigo-400 font-semibold text-sm text-indigo-900 rounded-2xl",
                   children: [
-                    { label: "Região de Saúde", style: "bg-white border-indigo-200 text-sm text-slate-600" },
-                    { label: "Rede de Atenção à Saúde (RAS)", style: "bg-white border-indigo-200 text-sm text-slate-600" },
-                    { label: "Portas de entrada do SUS", style: "bg-white border-indigo-200 text-sm text-slate-600" },
-                    { label: "Mapa da Saúde", style: "bg-white border-indigo-200 text-sm text-slate-600" }
+                    { label: "Região de Saúde", style: "bg-white border-indigo-200 text-sm text-slate-600 rounded-xl" },
+                    { label: "Rede de Atenção à Saúde (RAS)", style: "bg-white border-indigo-200 text-sm text-slate-600 rounded-xl" },
+                    { label: "Portas de entrada do SUS", style: "bg-white border-indigo-200 text-sm text-slate-600 rounded-xl" },
+                    { label: "Mapa da Saúde", style: "bg-white border-indigo-200 text-sm text-slate-600 rounded-xl" }
                   ]
                 },
                 {
                   label: "Cria:",
-                  style: "bg-indigo-100 border-indigo-400 font-semibold text-sm text-indigo-900",
+                  style: "bg-indigo-100 border-indigo-400 font-semibold text-sm text-indigo-900 rounded-2xl",
                   children: [
-                    { label: "COAP (Contrato Organizativo da Ação Pública)", style: "bg-white border-indigo-200 text-sm text-slate-600" }
+                    { label: "COAP (Contrato Organizativo da Ação Pública)", style: "bg-white border-indigo-200 text-sm text-slate-600 rounded-xl" }
                   ]
                 }
               ]
@@ -194,27 +192,27 @@
             {
               label: "8) Financiamento do SUS",
               icon: "fa-dollar-sign",
-              style: "bg-cyan-50 border-cyan-500 text-cyan-900 shadow-md text-base font-bold",
+              style: "bg-cyan-50 border-cyan-400 text-cyan-900 shadow-md text-base font-bold rounded-2xl",
               children: [
                 {
                   label: "EC nº 29/2000",
-                  style: "bg-cyan-100 border-cyan-400 font-semibold text-sm text-cyan-900",
+                  style: "bg-cyan-100 border-cyan-400 font-semibold text-sm text-cyan-900 rounded-2xl",
                   children: [
-                    { label: "Percentuais mínimos em saúde", style: "bg-white border-cyan-200 text-sm text-slate-600" }
+                    { label: "Percentuais mínimos em saúde", style: "bg-white border-cyan-200 text-sm text-slate-600 rounded-xl" }
                   ]
                 },
                 {
                   label: "EC nº 86/2015",
-                  style: "bg-cyan-100 border-cyan-400 font-semibold text-sm text-cyan-900",
+                  style: "bg-cyan-100 border-cyan-400 font-semibold text-sm text-cyan-900 rounded-2xl",
                   children: [
-                    { label: "Alteração no financiamento", style: "bg-white border-cyan-200 text-sm text-slate-600" }
+                    { label: "Alteração no financiamento", style: "bg-white border-cyan-200 text-sm text-slate-600 rounded-xl" }
                   ]
                 },
                 {
                   label: "EC nº 95/2016",
-                  style: "bg-cyan-100 border-cyan-400 font-semibold text-sm text-cyan-900",
+                  style: "bg-cyan-100 border-cyan-400 font-semibold text-sm text-cyan-900 rounded-2xl",
                   children: [
-                    { label: "Teto de gastos públicos", style: "bg-white border-cyan-200 text-sm text-slate-600" }
+                    { label: "Teto de gastos públicos", style: "bg-white border-cyan-200 text-sm text-slate-600 rounded-xl" }
                   ]
                 }
               ]
@@ -222,11 +220,11 @@
             {
               label: "9) Diretrizes estruturais",
               icon: "fa-layer-group",
-              style: "bg-orange-50 border-orange-500 text-orange-900 shadow-md text-base font-bold",
+              style: "bg-orange-50 border-orange-400 text-orange-900 shadow-md text-base font-bold rounded-2xl",
               children: [
-                { label: "Descentralização", style: "bg-white border-orange-200 text-sm text-slate-600" },
-                { label: "Regionalização", style: "bg-white border-orange-200 text-sm text-slate-600" },
-                { label: "Hierarquização", style: "bg-white border-orange-200 text-sm text-slate-600" }
+                { label: "Descentralização", style: "bg-white border-orange-200 text-sm text-slate-600 rounded-xl" },
+                { label: "Regionalização", style: "bg-white border-orange-200 text-sm text-slate-600 rounded-xl" },
+                { label: "Hierarquização", style: "bg-white border-orange-200 text-sm text-slate-600 rounded-xl" }
               ]
             }
           ]
@@ -239,32 +237,43 @@
               background-color: #f8fafc;
               background-image: radial-gradient(circle, #cbd5e1 1.5px, transparent 1.5px);
             }
-            .mindmap-node-group { display: flex; align-items: center; }
-            .mindmap-children {
-              display: flex; flex-direction: column; padding-left: 3.5rem; position: relative;
+            
+            /* Animação Orgânica de Expansão */
+            @keyframes growRight {
+              from { opacity: 0; transform: translateX(-15px) scale(0.96); }
+              to { opacity: 1; transform: translateX(0) scale(1); }
             }
-            .mindmap-children::before {
-              content: ''; position: absolute; left: 0; top: 50%; width: 1.75rem; height: 2px;
-              background-color: #cbd5e1; border-radius: 2px;
+            .animate-grow {
+              animation: growRight 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+              transform-origin: left center;
             }
-            .mindmap-branch { position: relative; padding: 0.6rem 0; display: flex; align-items: center; }
-            .mindmap-branch::before {
-              content: ''; position: absolute; left: -1.75rem; top: 0; bottom: 0; width: 2px; background-color: #cbd5e1;
+
+            /* Animação das Linhas SVG */
+            .path-line {
+              stroke-dasharray: 800;
+              stroke-dashoffset: 800;
+              animation: drawLine 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
-            .mindmap-branch::after {
-              content: ''; position: absolute; left: -1.75rem; top: 50%; width: 1.75rem; height: 2px;
-              background-color: #cbd5e1; border-radius: 2px;
+            @keyframes drawLine {
+              to { stroke-dashoffset: 0; }
             }
-            .mindmap-branch:first-child::before { top: 50%; border-top-left-radius: 4px; }
-            .mindmap-branch:last-child::before { bottom: 50%; border-bottom-left-radius: 4px; }
-            .mindmap-branch:first-child:last-child::before { display: none; }
+
+            /* Sombras e transições mais suaves para os nós */
+            .organic-node {
+              box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+              transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .organic-node:hover {
+              box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+              transform: translateY(-2px);
+            }
           `}</style>
         );
 
         const getIconClass = (iconName, isMain) => {
           if (!iconName) return null;
           let baseClasses = isMain 
-            ? "fas mr-3 text-xl opacity-90" 
+            ? "fas mr-3 text-2xl opacity-90" 
             : "fas mr-2 text-sm opacity-70";
           
           if (iconName === 'fa-balance-scale') return `${baseClasses} fa-balance-scale text-blue-300`;
@@ -278,13 +287,78 @@
           return `${baseClasses} ${iconName}`;
         };
 
-        const MindMapNode = ({ node, expandSignal, collapseSignal, navigateSignal }) => {
+        const MindMapNode = ({ node, expandSignal, collapseSignal, navigateSignal, scale }) => {
           const isMainNode = node.label === "MARCO LEGAL DO SUS";
           const [isExpanded, setIsExpanded] = useState(isMainNode);
           const [highlight, setHighlight] = useState(false);
-          const nodeRef = useRef(null);
+          const [lines, setLines] = useState([]);
+          
+          const wrapperRef = useRef(null);
+          const parentBtnRef = useRef(null);
+          const childrenContainerRef = useRef(null);
+          const scaleRef = useRef(scale);
           
           const hasChildren = node.children && node.children.length > 0;
+
+          // Manter o scaleRef atualizado sem disparar re-renders nas funções
+          useEffect(() => {
+            scaleRef.current = scale;
+          }, [scale]);
+
+          // Lógica de cálculo das curvas Bezier para desenhar as linhas (SVG)
+          const calculateLines = useCallback(() => {
+            if (!isExpanded || !wrapperRef.current || !parentBtnRef.current || !childrenContainerRef.current) {
+              setLines([]);
+              return;
+            }
+
+            const wrapperRect = wrapperRef.current.getBoundingClientRect();
+            const parentRect = parentBtnRef.current.getBoundingClientRect();
+            const currentScale = scaleRef.current || 1;
+
+            const childNodes = Array.from(childrenContainerRef.current.children);
+            
+            const newLines = childNodes.map(childWrapper => {
+              const childBtn = childWrapper.querySelector('.mindmap-btn');
+              if (!childBtn) return null;
+
+              const childRect = childBtn.getBoundingClientRect();
+
+              // Calcula posições relativas anulando o efeito do scale da tela para obter os pixels CSS reais
+              const startX = (parentRect.right - wrapperRect.left) / currentScale;
+              const startY = (parentRect.top + parentRect.height / 2 - wrapperRect.top) / currentScale;
+
+              const endX = (childRect.left - wrapperRect.left) / currentScale;
+              const endY = (childRect.top + childRect.height / 2 - wrapperRect.top) / currentScale;
+
+              // A intensidade da curva baseia-se na distância horizontal para gerar um aspecto fluido/orgânico
+              const cpDistance = Math.max(30, (endX - startX) * 0.5);
+              const cp1x = startX + cpDistance;
+              const cp1y = startY;
+              const cp2x = endX - cpDistance;
+              const cp2y = endY;
+
+              return `M ${startX} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${endX} ${endY}`;
+            }).filter(Boolean);
+
+            setLines(newLines);
+          }, [isExpanded]);
+
+          // Atualiza as linhas sempre que o layout mudar usando ResizeObserver
+          useEffect(() => {
+            if (!wrapperRef.current || !isExpanded) return;
+            
+            const observer = new ResizeObserver(() => {
+              calculateLines();
+            });
+            
+            observer.observe(wrapperRef.current);
+            if (childrenContainerRef.current) {
+              observer.observe(childrenContainerRef.current);
+            }
+            
+            return () => observer.disconnect();
+          }, [isExpanded, calculateLines]);
 
           // Expandir tudo
           useEffect(() => {
@@ -303,13 +377,10 @@
                 setIsExpanded(true);
               } else if (node.label === navigateSignal.target) {
                 setIsExpanded(true);
-                
-                // Dispara evento para o App centralizar este nó
                 setTimeout(() => {
-                  if (nodeRef.current) {
-                    const rect = nodeRef.current.getBoundingClientRect();
+                  if (parentBtnRef.current) {
+                    const rect = parentBtnRef.current.getBoundingClientRect();
                     window.dispatchEvent(new CustomEvent('centerNode', { detail: rect }));
-                    
                     setHighlight(true);
                     setTimeout(() => setHighlight(false), 2000);
                   }
@@ -325,40 +396,59 @@
           };
 
           return (
-            <div className="mindmap-node-group">
+            <div ref={wrapperRef} className="relative flex flex-row items-center gap-10">
+              {/* Linhas Conectoras SVG */}
+              {isExpanded && hasChildren && (
+                <svg className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-visible z-0">
+                  {lines.map((path, index) => (
+                    <path 
+                      key={index} 
+                      d={path} 
+                      fill="none" 
+                      stroke="#cbd5e1" // slate-300
+                      strokeWidth="2.5" 
+                      strokeLinecap="round"
+                      className="path-line"
+                    />
+                  ))}
+                </svg>
+              )}
+
+              {/* Botão do Nó Pai */}
               <button 
-                ref={nodeRef}
+                ref={parentBtnRef}
                 onClick={handleToggle}
                 className={`
-                  relative z-10 flex items-center px-4 py-3 rounded-xl border-2 text-left
-                  transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg
-                  max-w-[320px] leading-tight group
+                  mindmap-btn organic-node relative z-10 flex items-center px-5 py-3 border-2 text-left
+                  max-w-[320px] leading-tight group pointer-events-auto
                   ${hasChildren ? 'cursor-pointer hover:border-slate-400' : 'cursor-default'}
-                  ${node.style || 'bg-white border-slate-200 text-slate-700 shadow-sm'}
-                  ${highlight ? 'ring-4 ring-yellow-400 ring-offset-2 scale-105 z-50 shadow-2xl' : ''}
+                  ${node.style || 'bg-white border-slate-200 text-slate-700 rounded-xl'}
+                  ${highlight ? 'ring-4 ring-yellow-400 ring-offset-2 scale-105 shadow-2xl z-50' : ''}
                 `}
               >
                 {node.icon && <i className={getIconClass(node.icon, isMainNode)}></i>}
                 <span className="flex-1">{node.label}</span>
                 
                 {hasChildren && (
-                  <div className={`ml-3 flex items-center justify-center w-6 h-6 rounded-md transition-colors ${
+                  <div className={`ml-3 flex items-center justify-center w-6 h-6 rounded-full transition-colors duration-300 ${
                     isExpanded ? 'bg-slate-900/10 text-slate-700' : 'bg-blue-100 text-blue-600'
                   }`}>
-                    <i className={`fas ${isExpanded ? 'fa-chevron-down' : 'fa-chevron-right'} text-xs`}></i>
+                    <i className={`fas ${isExpanded ? 'fa-minus' : 'fa-plus'} text-[10px]`}></i>
                   </div>
                 )}
               </button>
 
-              {hasChildren && isExpanded && (
-                <div className="mindmap-children">
+              {/* Contêiner de Nós Filhos */}
+              {isExpanded && hasChildren && (
+                <div ref={childrenContainerRef} className="flex flex-col gap-5 relative z-10 animate-grow py-2">
                   {node.children.map((child, index) => (
-                    <div key={index} className="mindmap-branch">
+                    <div key={index} className="child-node-wrapper">
                       <MindMapNode 
                         node={child} 
                         expandSignal={expandSignal} 
                         collapseSignal={collapseSignal}
                         navigateSignal={navigateSignal}
+                        scale={scale}
                       />
                     </div>
                   ))}
@@ -373,13 +463,12 @@
           const [collapseSignal, setCollapseSignal] = useState(0);
           const [navigateSignal, setNavigateSignal] = useState({ count: 0, target: null });
 
-          // States para Pan (arrastar) e Zoom
           const [scale, setScale] = useState(1);
-          const [position, setPosition] = useState({ x: 50, y: 50 }); // Posição inicial no topo
+          // Posição inicial centralizada à esquerda para o novo layout horizontal
+          const [position, setPosition] = useState({ x: 100, y: window.innerHeight / 2 - 200 }); 
           const [isDragging, setIsDragging] = useState(false);
           const mainRef = useRef(null);
 
-          // Referência sofisticada para manter rastreamento constante sem forçar renderizações extras
           const pointerCache = useRef(new Map());
           const pointerState = useRef({
             isDown: false,
@@ -396,13 +485,14 @@
             setNavigateSignal(prev => ({ count: prev.count + 1, target: targetLabel }));
           };
 
-          // Inicializar centralização de zoom e bloqueio condicional de touch
+          useEffect(() => {
+            setPosition({ x: 80, y: window.innerHeight / 3 });
+          }, []);
+
           useEffect(() => {
             const mainElement = mainRef.current;
             if (!mainElement) return;
 
-            // Bloqueio condicional: impede scroll da página APENAS quando há um arrastar ativo
-            // ou quando há zoom de pinça ativo
             const preventScrollWhenDragging = (e) => {
               if (pointerState.current.isDragging || pointerCache.current.size >= 2) {
                 e.preventDefault();
@@ -410,29 +500,21 @@
             };
             mainElement.addEventListener('touchmove', preventScrollWhenDragging, { passive: false });
 
-            // Wheel listener para o Zoom
             const handleWheelEvent = (e) => {
-              e.preventDefault(); // Impede o scroll nativo da página apenas pro Wheel (Desktop)
-              
+              e.preventDefault(); 
               const zoomSensitivity = 0.002;
               const delta = -e.deltaY * zoomSensitivity;
               const scaleMultiplier = Math.exp(delta);
               
               setScale(prevScale => {
-                 const newScale = Math.min(Math.max(0.1, prevScale * scaleMultiplier), 4); // Limite de 0.1x a 4x
-                 
+                 const newScale = Math.min(Math.max(0.1, prevScale * scaleMultiplier), 4); 
                  setPosition(prevPos => {
                     const rect = mainElement.getBoundingClientRect();
                     const cursorX = e.clientX - rect.left;
                     const cursorY = e.clientY - rect.top;
-                    
                     const pointX = (cursorX - prevPos.x) / prevScale;
                     const pointY = (cursorY - prevPos.y) / prevScale;
-                    
-                    return {
-                      x: cursorX - pointX * newScale,
-                      y: cursorY - pointY * newScale
-                    };
+                    return { x: cursorX - pointX * newScale, y: cursorY - pointY * newScale };
                  });
                  return newScale;
               });
@@ -445,7 +527,6 @@
             };
           }, []);
 
-          // Listener para centralizar um nó durante a navegação
           useEffect(() => {
             const handleCenterNode = (e) => {
                if (!mainRef.current) return;
@@ -460,117 +541,72 @@
                const dx = screenCenterX - nodeCenterX;
                const dy = screenCenterY - nodeCenterY;
 
-               setPosition(prev => ({ 
-                 x: prev.x + dx, 
-                 y: prev.y + dy 
-               }));
+               setPosition(prev => ({ x: prev.x + dx, y: prev.y + dy }));
             };
             window.addEventListener('centerNode', handleCenterNode);
             return () => window.removeEventListener('centerNode', handleCenterNode);
           }, []);
 
-          // Handlers de Arrastar e Zoom (Pan & Pinch - Pointer Events)
           const handlePointerDown = (e) => {
             pointerCache.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
-            
-            // Ignora para o Pan se for um botão interativo (mas rastreia o dedo)
             if (e.target.closest('button')) {
               pointerState.current.isDown = false;
               return; 
             }
-            
-            // Se for o primeiro dedo no canvas, prepara para arrastar (Pan)
             if (pointerCache.current.size === 1) {
                 pointerState.current = {
-                  ...pointerState.current,
-                  isDown: true,
-                  startX: e.clientX,
-                  startY: e.clientY,
-                  lastX: e.clientX,
-                  lastY: e.clientY,
-                  pointerId: e.pointerId,
-                  isDragging: false,
-                  lastDistance: null
+                  ...pointerState.current, isDown: true, startX: e.clientX, startY: e.clientY,
+                  lastX: e.clientX, lastY: e.clientY, pointerId: e.pointerId, isDragging: false, lastDistance: null
                 };
                 setIsDragging(false);
-
-                if (mainRef.current) {
-                  mainRef.current.setPointerCapture(e.pointerId);
-                }
+                if (mainRef.current) mainRef.current.setPointerCapture(e.pointerId);
             }
           };
 
           const handlePointerMove = (e) => {
             if (!pointerCache.current.has(e.pointerId)) return;
-
-            // Atualiza posição do ponteiro na cache
             pointerCache.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
-            // Lógica de Pinch Zoom (2 dedos)
             if (pointerCache.current.size === 2) {
-              // Cancela o Pan se estiver a acontecer
               pointerState.current.isDown = false;
               if (pointerState.current.isDragging) {
                   pointerState.current.isDragging = false;
                   setIsDragging(false);
               }
-
               const pointers = Array.from(pointerCache.current.values());
-              const p1 = pointers[0];
-              const p2 = pointers[1];
-
-              // Distância atual entre os 2 dedos
-              const currentDistance = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+              const currentDistance = Math.hypot(pointers[1].x - pointers[0].x, pointers[1].y - pointers[0].y);
 
               if (pointerState.current.lastDistance) {
                 const scaleMultiplier = currentDistance / pointerState.current.lastDistance;
-                
-                // Encontra o centro do movimento de pinça (âncora do zoom)
-                const centerX = (p1.x + p2.x) / 2;
-                const centerY = (p1.y + p2.y) / 2;
+                const centerX = (pointers[0].x + pointers[1].x) / 2;
+                const centerY = (pointers[0].y + pointers[1].y) / 2;
 
                 setScale(prevScale => {
                    const newScale = Math.min(Math.max(0.1, prevScale * scaleMultiplier), 4);
                    if (newScale === prevScale) return prevScale;
-
                    setPosition(prevPos => {
                       if (!mainRef.current) return prevPos;
                       const rect = mainRef.current.getBoundingClientRect();
-                      const cursorX = centerX - rect.left;
-                      const cursorY = centerY - rect.top;
-
-                      const pointX = (cursorX - prevPos.x) / prevScale;
-                      const pointY = (cursorY - prevPos.y) / prevScale;
-
-                      return {
-                        x: cursorX - pointX * newScale,
-                        y: cursorY - pointY * newScale
-                      };
+                      const pointX = (centerX - rect.left - prevPos.x) / prevScale;
+                      const pointY = (centerY - rect.top - prevPos.y) / prevScale;
+                      return { x: centerX - rect.left - pointX * newScale, y: centerY - rect.top - pointY * newScale };
                    });
                    return newScale;
                 });
               }
               pointerState.current.lastDistance = currentDistance;
-            }
-            // Lógica de Pan (1 dedo)
-            else if (pointerCache.current.size === 1 && pointerState.current.isDown) {
+            } else if (pointerCache.current.size === 1 && pointerState.current.isDown) {
               if (e.pointerId !== pointerState.current.pointerId) return;
-
               const dx = e.clientX - pointerState.current.startX;
               const dy = e.clientY - pointerState.current.startY;
-
-              // Threshold (Limiar) de 5px para ativar o modo de arraste (diferenciando de um toque simples)
               if (!pointerState.current.isDragging && Math.sqrt(dx * dx + dy * dy) > 5) {
                 pointerState.current.isDragging = true;
                 setIsDragging(true);
               }
-
               if (pointerState.current.isDragging) {
                 const deltaX = e.clientX - pointerState.current.lastX;
                 const deltaY = e.clientY - pointerState.current.lastY;
-                
                 setPosition(prev => ({ x: prev.x + deltaX, y: prev.y + deltaY }));
-                
                 pointerState.current.lastX = e.clientX;
                 pointerState.current.lastY = e.clientY;
               }
@@ -579,36 +615,22 @@
 
           const handlePointerUp = (e) => {
             pointerCache.current.delete(e.pointerId);
-
-            if (pointerCache.current.size < 2) {
-              pointerState.current.lastDistance = null;
-            }
-
+            if (pointerCache.current.size < 2) pointerState.current.lastDistance = null;
             if (pointerCache.current.size === 0) {
               pointerState.current.isDown = false;
               pointerState.current.isDragging = false;
               pointerState.current.pointerId = null;
               setIsDragging(false);
             } else if (pointerCache.current.size === 1) {
-               // Evita saltos se retirar um dos dedos durante o zoom, forçando re-toque
                const remainingId = Array.from(pointerCache.current.keys())[0];
                const remainingPointer = pointerCache.current.get(remainingId);
                pointerState.current = {
-                 ...pointerState.current,
-                 isDown: true,
-                 startX: remainingPointer.x,
-                 startY: remainingPointer.y,
-                 lastX: remainingPointer.x,
-                 lastY: remainingPointer.y,
-                 pointerId: remainingId,
-                 isDragging: false
+                 ...pointerState.current, isDown: true, startX: remainingPointer.x, startY: remainingPointer.y,
+                 lastX: remainingPointer.x, lastY: remainingPointer.y, pointerId: remainingId, isDragging: false
                };
                setIsDragging(false);
             }
-            
-            if (mainRef.current && mainRef.current.hasPointerCapture(e.pointerId)) {
-              mainRef.current.releasePointerCapture(e.pointerId);
-            }
+            if (mainRef.current && mainRef.current.hasPointerCapture(e.pointerId)) mainRef.current.releasePointerCapture(e.pointerId);
           };
 
           return (
@@ -623,18 +645,18 @@
                       Mapa Mental: Marco Legal do SUS
                     </h1>
                     <p className="text-slate-500 mt-1 text-sm font-medium">
-                      Faça <span className="font-bold">Zoom</span> (movimento de pinça ou scroll do rato). Toque e arraste o fundo para <span className="font-bold">Mover</span>.
+                      Faça <span className="font-bold">Zoom</span> e Arraste o fundo para <span className="font-bold">Navegar</span>.
                     </p>
                     <div className="flex gap-3 mt-4">
                       <button 
                         onClick={() => setExpandSignal(s => s + 1)} 
-                        className="px-3 py-1.5 text-sm font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-md hover:bg-indigo-100 transition-colors flex items-center shadow-sm"
+                        className="px-3 py-1.5 text-sm font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition-colors flex items-center shadow-sm"
                       >
                         <i className="fas fa-expand-arrows-alt mr-2"></i> Expandir tudo
                       </button>
                       <button 
                         onClick={() => setCollapseSignal(s => s + 1)} 
-                        className="px-3 py-1.5 text-sm font-semibold bg-slate-50 text-slate-700 border border-slate-200 rounded-md hover:bg-slate-100 transition-colors flex items-center shadow-sm"
+                        className="px-3 py-1.5 text-sm font-semibold bg-slate-50 text-slate-700 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors flex items-center shadow-sm"
                       >
                         <i className="fas fa-compress-arrows-alt mr-2"></i> Recolher tudo
                       </button>
@@ -654,14 +676,13 @@
                 </div>
               </header>
 
-              {/* Área Interativa com Pan e Pinch Zoom */}
               <main 
                 ref={mainRef}
-                className={`flex-1 relative overflow-hidden bg-dots transition-opacity duration-200 ${isDragging ? 'cursor-grabbing opacity-90 shadow-inner' : 'cursor-grab opacity-100'}`}
+                className={`flex-1 relative overflow-hidden bg-dots select-none transition-opacity duration-200 ${isDragging ? 'cursor-grabbing opacity-90 shadow-inner' : 'cursor-grab opacity-100'}`}
                 style={{
                    backgroundPosition: `${position.x}px ${position.y}px`,
                    backgroundSize: `${24 * scale}px ${24 * scale}px`,
-                   touchAction: 'pan-x pan-y' // Permite scroll do navegador e evita touch-action: none global
+                   touchAction: 'pan-x pan-y'
                 }}
                 onPointerDown={handlePointerDown}
                 onPointerMove={handlePointerMove}
@@ -670,7 +691,7 @@
                 onPointerOut={handlePointerUp}
               >
                 <div 
-                  className="absolute top-0 left-0 w-max transform-gpu"
+                  className="absolute top-0 left-0 w-max transform-gpu pointer-events-none"
                   style={{ 
                     transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
                     transformOrigin: '0 0',
@@ -682,6 +703,7 @@
                     expandSignal={expandSignal} 
                     collapseSignal={collapseSignal}
                     navigateSignal={navigateSignal}
+                    scale={scale}
                   />
                 </div>
               </main>
